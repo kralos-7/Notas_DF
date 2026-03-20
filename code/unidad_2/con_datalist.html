@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Datalist ejemplo</title>
+</head>
+<body>
+
+<main>
+  <section>
+    <h1>Selecciona tu carrera</h1>
+
+    <form>
+      <label for="carrera">Carrera:</label><br>
+      <input list="carreras" id="carrera" name="carrera" placeholder="Escribe o selecciona..." required>
+
+      <datalist id="carreras">
+        <option value="Ingeniería en Sistemas">
+        <option value="Diseño Gráfico">
+        <option value="Administración">
+        <option value="Contaduría">
+        <option value="Arquitectura">
+      </datalist>
+
+      <br><br>
+      <button type="submit">Enviar</button>
+    </form>
+
+  </section>
+</main>
+
+</body>
+</html>

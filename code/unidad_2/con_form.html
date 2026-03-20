@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Usuario</title>
+</head>
+<body>
+
+<header>
+  <h1>Registro de Usuario</h1>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#">Inicio</a></li>
+    <li><a href="#">Contacto</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <section>
+    <h2>Datos personales</h2>
+
+    <form action="#" method="POST">
+
+      <article>
+        <h3>Información básica</h3>
+
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+
+        <label for="email">Correo electrónico:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="edad">Edad:</label><br>
+        <input type="number" id="edad" name="edad" min="18" max="99"><br><br>
+
+      </article>
+
+      <article>
+        <h3>Información adicional</h3>
+
+        <label for="fecha">Fecha de nacimiento:</label><br>
+        <input type="date" id="fecha" name="fecha"><br><br>
+
+        <label for="sitio">Sitio web:</label><br>
+        <input type="url" id="sitio" name="sitio"><br><br>
+
+        <label for="comentarios">Comentarios:</label><br>
+        <textarea id="comentarios" name="comentarios" rows="4"></textarea><br><br>
+
+      </article>
+
+      <button type="submit">Enviar</button>
+
+    </form>
+
+  </section>
+
+  <aside>
+    <h2>Información</h2>
+    <p>Todos los campos marcados son obligatorios.</p>
+  </aside>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 - Mi Sitio Web</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ejercicio 2 — Encuentra los Errores</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+      min-height: 100vh;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 36px;
+      width: 100%;
+      max-width: 540px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .badge {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 22px; color: #1e293b; margin-bottom: 6px; }
+    .instruccion {
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #7f1d1d;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    .instruccion strong { display: block; margin-bottom: 4px; }
+    .lista-errores {
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: #7c2d12;
+    }
+    .lista-errores ol { padding-left: 18px; line-height: 2; }
+    fieldset {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    legend {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0369a1;
+      padding: 0 8px;
+    }
+    .campo { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 5px;
+    }
+    label .req { color: #ef4444; }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 14px;
+      color: #111;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+    .hint {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+    .error-tag {
+      display: inline-block;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .fila-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    button[type="submit"] {
+      width: 100%;
+      padding: 13px;
+      background: #0284c7;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover { background: #0369a1; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <span class="badge">Ejercicio 2 de 3</span>
+  <h1>🐛 Encuentra los Errores</h1>
+
+  <div class="instruccion">
+    <strong>📝 Tu tarea:</strong>
+    El siguiente formulario de pago tiene <strong>5 errores</strong> en sus atributos de validación HTML5.
+    Encuéntralos y corrígelos. Cada campo con error tiene la etiqueta <span class="error-tag">BUG</span>.
+  </div>
+
+  <div class="lista-errores">
+    <strong>🔍 Pistas — busca errores de tipo:</strong>
+    <ol>
+      <li>Un <code>type</code> incorrecto que no valida lo que debería</li>
+      <li>Un <code>pattern</code> que permite menos dígitos de los necesarios</li>
+      <li>Un atributo <code>max</code> con un valor que no tiene sentido</li>
+      <li>Un campo obligatorio al que le falta <code>required</code></li>
+      <li>Un <code>minlength</code> demasiado corto para ser seguro</li>
+    </ol>
+  </div>
+
+  <form id="forma-pago">
+
+    <fieldset>
+      <legend>💳 Datos de la tarjeta</legend>
+
+      <div class="campo">
+        <label for="titular">
+          Nombre del titular <span class="req">*</span>
+          <span class="error-tag">BUG</span>
+        </label>
+        <!--
+          ERROR: el titular es obligatorio pero falta el atributo correspondiente.
+          Además, el minlength debería ser al menos 5, no 1.
+        -->
+        <input
+          type="text"
+          id="titular"
+          name="titular"
+          placeholder="Como aparece en la tarjeta"
+          minlength="1"
+          maxlength="60"
+        />
+      </div>
+
+      <div class="campo">
+        <label for="numero-tarjeta">
+          Número de tarjeta <span class="req">*</span>
+          <span class="error-tag">BUG</span>
+        </label>
+        <!--
+          ERROR: el pattern solo valida 15 dígitos seguidos.
+          Una tarjeta estándar Visa/MC tiene 16 dígitos.
+          Corrígelo para aceptar exactamente 16 dígitos.
+        -->
+        <input
+          type="text"
+          id="numero-tarjeta"
+          name="numero_tarjeta"
+          placeholder="1234 5678 9012 3456"
+          pattern="\d{15}"
+          required
+          maxlength="16"
+        />
+        <p class="hint">16 dígitos sin espacios.</p>
+      </div>
+
+      <div class="fila-2">
+        <div class="campo">
+          <label for="mes-exp">
+            Mes exp. <span class="req">*</span>
+            <span class="error-tag">BUG</span>
+          </label>
+          <!--
+            ERROR: el type es "text" pero debería ser uno
+            que limite el rango numérico entre 1 y 12.
+          -->
+          <input
+            type="text"
+            id="mes-exp"
+            name="mes_exp"
+            placeholder="MM"
+            min="1"
+            max="12"
+            required
+          />
+        </div>
+        <div class="campo">
+          <label for="anio-exp">
+            Año exp. <span class="req">*</span>
+            <span class="error-tag">BUG</span>
+          </label>
+          <!--
+            ERROR: el max está en 2020 pero estamos en 2025+.
+            Actualiza el max a un año futuro razonable (ej. 2035)
+            y el min al año actual.
+          -->
+          <input
+            type="number"
+            id="anio-exp"
+            name="anio_exp"
+            placeholder="AAAA"
+            min="2024"
+            max="2020"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="cvv">
+          CVV <span class="req">*</span>
+          <span class="error-tag">BUG</span>
+        </label>
+        <!--
+          ERROR: el type="email" no tiene sentido aquí.
+          Usa el type correcto y un pattern para aceptar 3 o 4 dígitos.
+        -->
+        <input
+          type="email"
+          id="cvv"
+          name="cvv"
+          placeholder="123"
+          pattern="\d{3,4}"
+          maxlength="4"
+          required
+        />
+        <p class="hint">3 dígitos (4 para Amex).</p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>📦 Datos de envío</legend>
+      <div class="campo">
+        <label for="telefono">Teléfono de contacto <span class="req">*</span></label>
+        <input
+          type="tel"
+          id="telefono"
+          name="telefono"
+          placeholder="+52 555 123 4567"
+          pattern="[\+]?[\d\s\-]{8,15}"
+          required
+        />
+      </div>
+      <div class="campo">
+        <label for="direccion">Dirección <span class="req">*</span></label>
+        <input
+          type="text"
+          id="direccion"
+          name="direccion"
+          placeholder="Calle, número, colonia"
+          minlength="10"
+          maxlength="120"
+          required
+        />
+      </div>
+    </fieldset>
+
+    <button type="submit">Pagar ahora</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('forma-pago').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (this.checkValidity()) {
+      alert('✅ Pago procesado (simulado).');
+    } else {
+      alert('⚠️ Hay campos inválidos. Revisa el formulario.');
+      this.reportValidity();
+    }
+  });
+</script>
+</body>
+</html>

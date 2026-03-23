@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WAI-ARIA: Comparativa de Accesibilidad</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bad:  #ff4d4d;
+      --good: #00e5a0;
+      --bg:   #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: #2a2a3a;
+      --text: #e8e8f0;
+      --muted: #6b6b8a;
+      --accent: #7c6af7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .header-left h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .header-left h1 span { color: var(--accent); }
+    .header-left p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+    .leyenda {
+      display: flex;
+      gap: 20px;
+      margin-left: auto;
+    }
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .dot.bad  { background: var(--bad); }
+    .dot.good { background: var(--good); }
+
+    /* ── NAV EJEMPLOS ── */
+    nav {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+    }
+    nav button {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--muted);
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 14px 18px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    nav button:hover { color: var(--text); }
+    nav button.activo {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── CONTENIDO PRINCIPAL ── */
+    main { padding: 40px; }
+
+    .ejemplo { display: none; }
+    .ejemplo.visible { display: block; }
+
+    .ejemplo-header {
+      margin-bottom: 28px;
+    }
+    .ejemplo-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .ejemplo-titulo {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .ejemplo-desc {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 700px;
+      line-height: 1.6;
+    }
+
+    /* ── GRID COMPARATIVA ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-header.sin { background: rgba(255,77,77,0.08); }
+    .panel-header.con { background: rgba(0,229,160,0.08); }
+    .panel-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .panel-tag.sin { background: rgba(255,77,77,0.2); color: var(--bad); }
+    .panel-tag.con { background: rgba(0,229,160,0.2); color: var(--good); }
+    .panel-subtitulo { font-size: 13px; color: var(--muted); }
+
+    .panel-demo {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-code {
+      padding: 0;
+    }
+    .panel-code pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #a0a0c0;
+      padding: 20px;
+      overflow-x: auto;
+      background: #0d0d14;
+      margin: 0;
+    }
+    .panel-code .kw  { color: #7c6af7; }
+    .panel-code .at  { color: #56d9b8; }
+    .panel-code .val { color: #f4a261; }
+    .panel-code .cm  { color: #4a4a6a; font-style: italic; }
+    .panel-code .hl  { background: rgba(0,229,160,0.1); display: inline-block; width: 100%; border-left: 2px solid var(--good); padding-left: 6px; margin-left: -8px; }
+
+    /* ── NOTA EXPLICATIVA ── */
+    .nota-aria {
+      margin-top: 24px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #b0b0d0;
+    }
+    .nota-aria strong { color: var(--accent); display: block; margin-bottom: 6px; }
+    .nota-aria code {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0d0d14;
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: #56d9b8;
+      font-size: 11.5px;
+    }
+
+    /* ── ESTILOS DEMO ── */
+    .demo-form { display: flex; flex-direction: column; gap: 14px; }
+    .demo-form label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #b0b0d0;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .demo-form input,
+    .demo-form select,
+    .demo-form textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Syne', sans-serif;
+    }
+    .demo-form input:focus,
+    .demo-form select:focus,
+    .demo-form textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .demo-form textarea { min-height: 70px; resize: vertical; }
+    .demo-form button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 7px;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      align-self: flex-start;
+    }
+    .demo-form button:hover { opacity: 0.85; }
+    .btn-pri { background: var(--accent); color: white; }
+    .btn-del { background: var(--bad); color: white; }
+    .demo-error { font-size: 12px; color: var(--bad); margin-top: 3px; }
+    .demo-hint  { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .demo-msg {
+      padding: 10px 14px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .demo-msg.info { background: rgba(124,106,247,0.15); color: #a59cf7; }
+    .demo-msg.success { background: rgba(0,229,160,0.1); color: var(--good); }
+    .demo-msg.error { background: rgba(255,77,77,0.1); color: var(--bad); }
+    .progress-bar-wrap {
+      width: 100%;
+      background: var(--border);
+      border-radius: 10px;
+      height: 14px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--good);
+      border-radius: 10px;
+      transition: width 0.5s;
+    }
+    .toggle-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .toggle-btn {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .toggle-btn[aria-pressed="true"],
+    .toggle-btn.pressed {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .tab-list { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+    .tab-btn {
+      padding: 8px 16px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab-btn.activo, .tab-btn[aria-selected="true"] {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .tab-panel { font-size: 13px; color: var(--muted); padding: 4px 0; }
+    .tab-panel.oculto { display: none; }
+    .modal-overlay {
+      background: rgba(0,0,0,0.6);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .modal-box {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+    .modal-box h3 { font-size: 15px; margin-bottom: 8px; }
+    .modal-box p { font-size: 13px; color: var(--muted); }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .live-region {
+      min-height: 24px;
+      font-size: 13px;
+      padding: 4px 0;
+    }
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .req { color: var(--bad); }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .campo-invalido input { border-color: var(--bad) !important; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>WAI-<span>ARIA</span> · Comparativa de Accesibilidad</h1>
+    <p>10 ejemplos lado a lado — sin vs con atributos de accesibilidad</p>
+  </div>
+  <div class="leyenda">
+    <span class="chip"><span class="dot bad"></span>Sin accesibilidad</span>
+    <span class="chip"><span class="dot good"></span>Con WAI-ARIA</span>
+  </div>
+</header>
+
+<nav id="nav-tabs" role="tablist" aria-label="Ejemplos de accesibilidad">
+  <button class="activo" onclick="mostrar(0)" role="tab" aria-selected="true" aria-controls="ej-0">1. Label</button>
+  <button onclick="mostrar(1)" role="tab" aria-selected="false" aria-controls="ej-1">2. Error</button>
+  <button onclick="mostrar(2)" role="tab" aria-selected="false" aria-controls="ej-2">3. Requerido</button>
+  <button onclick="mostrar(3)" role="tab" aria-selected="false" aria-controls="ej-3">4. Live region</button>
+  <button onclick="mostrar(4)" role="tab" aria-selected="false" aria-controls="ej-4">5. Progreso</button>
+  <button onclick="mostrar(5)" role="tab" aria-selected="false" aria-controls="ej-5">6. Toggle</button>
+  <button onclick="mostrar(6)" role="tab" aria-selected="false" aria-controls="ej-6">7. Tabs</button>
+  <button onclick="mostrar(7)" role="tab" aria-selected="false" aria-controls="ej-7">8. Modal</button>
+  <button onclick="mostrar(8)" role="tab" aria-selected="false" aria-controls="ej-8">9. Icono</button>
+  <button onclick="mostrar(9)" role="tab" aria-selected="false" aria-controls="ej-9">10. Spinner</button>
+</nav>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 1: Label asociado                         -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo visible" id="ej-0">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 01 / 10</p>
+      <h2 class="ejemplo-titulo">Asociación de etiquetas con campos</h2>
+      <p class="ejemplo-desc">Un lector de pantalla necesita saber qué etiqueta pertenece a qué campo. Sin la asociación correcta, el usuario no sabe qué se le está pidiendo.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Label visualmente cerca, pero no asociado</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div>
+              <p style="font-size:13px;color:#b0b0d0;margin-bottom:4px">Nombre</p>
+              <input type="text" placeholder="Tu nombre" />
+            </div>
+            <div>
+              <p style="font-size:13px;color:#b0b0d0;margin-bottom:4px">Correo</p>
+              <input type="text" placeholder="tu@correo.com" />
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ Usa &lt;p&gt; como etiqueta visual --&gt;</span>
+<span class="kw">&lt;p&gt;</span>Nombre<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"text"</span> <span class="kw">/&gt;</span>
+
+<span class="kw">&lt;p&gt;</span>Correo<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"text"</span> <span class="kw">/&gt;</span>
+
+<span class="cm">&lt;!-- El lector de pantalla no sabe
+     qué campo es qué --&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">Label asociado con for + id</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div class="form-group">
+              <label for="ex1-nombre">Nombre</label>
+              <input type="text" id="ex1-nombre" placeholder="Tu nombre" />
+            </div>
+            <div class="form-group">
+              <label for="ex1-correo">Correo</label>
+              <input type="email" id="ex1-correo" placeholder="tu@correo.com" />
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ✅ for="id" crea asociación semántica --&gt;</span>
+<span class="hl"><span class="kw">&lt;label</span> <span class="at">for</span>=<span class="val">"nombre"</span><span class="kw">&gt;</span>Nombre<span class="kw">&lt;/label&gt;</span></span>
+<span class="hl"><span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"text"</span> <span class="at">id</span>=<span class="val">"nombre"</span> <span class="kw">/&gt;</span></span>
+
+<span class="kw">&lt;label</span> <span class="at">for</span>=<span class="val">"correo"</span><span class="kw">&gt;</span>Correo<span class="kw">&lt;/label&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"email"</span> <span class="at">id</span>=<span class="val">"correo"</span> <span class="kw">/&gt;</span>
+
+<span class="cm">&lt;!-- Click en el label enfoca el campo --&gt;</span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      Con <code>&lt;label for="id"&gt;</code> el lector de pantalla anuncia "Nombre, campo de texto" al enfocar el input. Sin esto, solo dice "campo de texto en blanco" y el usuario no sabe qué escribir. Además, el <code>for</code> hace que hacer clic en el label enfoque el campo, mejorando la usabilidad para todos.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 2: Mensajes de error                      -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-1">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 02 / 10</p>
+      <h2 class="ejemplo-titulo">Mensajes de error accesibles</h2>
+      <p class="ejemplo-desc">Un error visible visualmente puede ser completamente invisible para un lector de pantalla si no está vinculado al campo que lo provocó.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Error solo visual, no vinculado</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div class="form-group">
+              <label for="ex2a-email">Correo electrónico</label>
+              <input type="text" id="ex2a-email" value="no-es-un-correo" style="border-color:var(--bad)" />
+              <p style="color:var(--bad);font-size:12px;">⚠ Ingresa un correo válido</p>
+            </div>
+            <button class="btn-pri">Enviar</button>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="kw">&lt;label</span> <span class="at">for</span>=<span class="val">"email"</span><span class="kw">&gt;</span>Correo<span class="kw">&lt;/label&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"text"</span> <span class="at">id</span>=<span class="val">"email"</span> <span class="kw">/&gt;</span>
+
+<span class="cm">&lt;!-- ❌ El error existe en el DOM
+     pero el input no sabe que existe --&gt;</span>
+<span class="kw">&lt;p</span> <span class="at">style</span>=<span class="val">"color:red"</span><span class="kw">&gt;</span>
+  Ingresa un correo válido
+<span class="kw">&lt;/p&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">aria-describedby + aria-invalid</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div class="form-group">
+              <label for="ex2b-email">Correo electrónico</label>
+              <input type="email" id="ex2b-email" value="no-es-un-correo"
+                aria-invalid="true"
+                aria-describedby="ex2b-error"
+                style="border-color:var(--bad)" />
+              <p id="ex2b-error" role="alert" style="color:var(--bad);font-size:12px;">⚠ Ingresa un correo válido</p>
+            </div>
+            <button class="btn-pri">Enviar</button>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="kw">&lt;label</span> <span class="at">for</span>=<span class="val">"email"</span><span class="kw">&gt;</span>Correo<span class="kw">&lt;/label&gt;</span>
+<span class="hl"><span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"email"</span> <span class="at">id</span>=<span class="val">"email"</span></span>
+<span class="hl">       <span class="at">aria-invalid</span>=<span class="val">"true"</span></span>
+<span class="hl">       <span class="at">aria-describedby</span>=<span class="val">"error-msg"</span> <span class="kw">/&gt;</span></span>
+
+<span class="cm">&lt;!-- ✅ role=alert anuncia el error
+     automáticamente al lector --&gt;</span>
+<span class="hl"><span class="kw">&lt;p</span> <span class="at">id</span>=<span class="val">"error-msg"</span> <span class="at">role</span>=<span class="val">"alert"</span><span class="kw">&gt;</span></span>
+<span class="hl">  Ingresa un correo válido</span>
+<span class="hl"><span class="kw">&lt;/p&gt;</span></span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      <code>aria-invalid="true"</code> le dice al lector de pantalla que el campo tiene un error. <code>aria-describedby</code> vincula el campo con el mensaje de error por id, así el lector anuncia ambos juntos. <code>role="alert"</code> hace que el mensaje se anuncie automáticamente en cuanto aparece en el DOM.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 3: Campo requerido                        -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-2">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 03 / 10</p>
+      <h2 class="ejemplo-titulo">Campos requeridos</h2>
+      <p class="ejemplo-desc">El asterisco (*) es una convención visual. Un lector de pantalla no sabe que significa "obligatorio" a menos que se lo indiquemos explícitamente.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Solo el asterisco visual</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div class="form-group">
+              <label for="ex3a-n">Nombre <span style="color:var(--bad)">*</span></label>
+              <input type="text" id="ex3a-n" placeholder="Obligatorio" />
+            </div>
+            <div class="form-group">
+              <label for="ex3a-c">Ciudad</label>
+              <input type="text" id="ex3a-c" placeholder="Opcional" />
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ El * es visual.
+     El lector lo lee literalmente
+     como "asterisco" o lo ignora --&gt;</span>
+<span class="kw">&lt;label</span> <span class="at">for</span>=<span class="val">"nombre"</span><span class="kw">&gt;</span>
+  Nombre <span class="kw">&lt;span&gt;</span>*<span class="kw">&lt;/span&gt;</span>
+<span class="kw">&lt;/label&gt;</span>
+<span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"text"</span> <span class="at">id</span>=<span class="val">"nombre"</span> <span class="kw">/&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">required + aria-required + aria-hidden</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div class="form-group">
+              <label for="ex3b-n">
+                Nombre
+                <span aria-hidden="true" style="color:var(--bad)"> *</span>
+              </label>
+              <input type="text" id="ex3b-n" placeholder="Obligatorio"
+                required aria-required="true" />
+            </div>
+            <div class="form-group">
+              <label for="ex3b-c">Ciudad</label>
+              <input type="text" id="ex3b-c" placeholder="Opcional" />
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="kw">&lt;label</span> <span class="at">for</span>=<span class="val">"nombre"</span><span class="kw">&gt;</span>
+  Nombre
+  <span class="cm">&lt;!-- aria-hidden oculta el * al lector --&gt;</span>
+  <span class="hl"><span class="kw">&lt;span</span> <span class="at">aria-hidden</span>=<span class="val">"true"</span><span class="kw">&gt;</span> *<span class="kw">&lt;/span&gt;</span></span>
+<span class="kw">&lt;/label&gt;</span>
+<span class="hl"><span class="kw">&lt;input</span> <span class="at">type</span>=<span class="val">"text"</span> <span class="at">id</span>=<span class="val">"nombre"</span></span>
+<span class="hl">       <span class="at">required</span></span>
+<span class="hl">       <span class="at">aria-required</span>=<span class="val">"true"</span> <span class="kw">/&gt;</span></span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      <code>required</code> activa la validación nativa del navegador. <code>aria-required="true"</code> es la señal para lectores de pantalla — algunos no interpretan <code>required</code> solo. El <code>aria-hidden="true"</code> en el asterisco evita que el lector diga "asterisco" — el campo ya indica "requerido" semánticamente.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 4: Live Regions                           -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-3">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 04 / 10</p>
+      <h2 class="ejemplo-titulo">Regiones en vivo (Live Regions)</h2>
+      <p class="ejemplo-desc">Cuando el contenido cambia dinámicamente (contadores, notificaciones), un lector de pantalla no lo detecta a menos que esté marcado como región en vivo.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Contador visual, silencioso para lectores</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <label for="ex4a-t">Mensaje (max 100 caracteres)</label>
+            <textarea id="ex4a-t" placeholder="Escribe algo..." oninput="
+              document.getElementById('ex4a-cnt').textContent = this.value.length + '/100';
+            " maxlength="100"></textarea>
+            <p id="ex4a-cnt" style="font-size:12px;color:var(--muted);text-align:right">0/100</p>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="kw">&lt;textarea</span> <span class="at">id</span>=<span class="val">"msg"</span><span class="kw">&gt;&lt;/textarea&gt;</span>
+
+<span class="cm">&lt;!-- ❌ El contador cambia visualmente
+     pero el lector de pantalla
+     no sabe que el contenido cambió --&gt;</span>
+<span class="kw">&lt;p</span> <span class="at">id</span>=<span class="val">"contador"</span><span class="kw">&gt;</span>0/100<span class="kw">&lt;/p&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">aria-live="polite"</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <label for="ex4b-t">Mensaje (max 100 caracteres)</label>
+            <textarea id="ex4b-t" placeholder="Escribe algo..." oninput="
+              var n = this.value.length;
+              document.getElementById('ex4b-cnt').textContent = n + ' de 100 caracteres usados';
+            " maxlength="100"
+              aria-describedby="ex4b-cnt"></textarea>
+            <p id="ex4b-cnt" aria-live="polite" aria-atomic="true"
+               style="font-size:12px;color:var(--muted);text-align:right">0 de 100 caracteres usados</p>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="kw">&lt;textarea</span> <span class="at">aria-describedby</span>=<span class="val">"contador"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/textarea&gt;</span>
+
+<span class="cm">&lt;!-- ✅ aria-live anuncia el cambio
+     aria-atomic lee el texto completo --&gt;</span>
+<span class="hl"><span class="kw">&lt;p</span> <span class="at">id</span>=<span class="val">"contador"</span></span>
+<span class="hl">   <span class="at">aria-live</span>=<span class="val">"polite"</span></span>
+<span class="hl">   <span class="at">aria-atomic</span>=<span class="val">"true"</span><span class="kw">&gt;</span></span>
+<span class="hl">  0 de 100 caracteres usados</span>
+<span class="hl"><span class="kw">&lt;/p&gt;</span></span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      <code>aria-live="polite"</code> indica que la región se actualizará y el lector debe anunciarla cuando el usuario termine de leer lo que está leyendo. <code>aria-atomic="true"</code> hace que se lea el texto completo del elemento cada vez que cambia, no solo la parte que cambió.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 5: Barra de progreso                      -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-4">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 05 / 10</p>
+      <h2 class="ejemplo-titulo">Barra de progreso</h2>
+      <p class="ejemplo-desc">Una barra visual de progreso no comunica nada a usuarios de lectores de pantalla sin los atributos ARIA correctos.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Solo visual, sin semántica</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <p style="font-size:13px;color:#b0b0d0;margin-bottom:8px">Cargando archivo...</p>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" id="ex5a-bar" style="width:65%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px">
+              <span style="font-size:12px;color:var(--muted)">65%</span>
+              <button class="btn-pri" style="font-size:12px;padding:5px 12px" onclick="
+                var b=document.getElementById('ex5a-bar');
+                var p=parseInt(b.style.width)+10;
+                if(p>100)p=0;
+                b.style.width=p+'%';
+                b.previousElementSibling&&(b.previousElementSibling.textContent=p+'%');
+              ">+10%</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ div decorativo sin info
+     para lectores de pantalla --&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="val">"barra-wrap"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="val">"barra-fill"</span>
+       <span class="at">style</span>=<span class="val">"width: 65%"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">role="progressbar" + aria-valuenow</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <p style="font-size:13px;color:#b0b0d0;margin-bottom:8px" id="ex5b-label">Cargando archivo...</p>
+            <div class="progress-bar-wrap"
+              role="progressbar"
+              aria-valuenow="65"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-labelledby="ex5b-label"
+              aria-valuetext="65% completado"
+              id="ex5b-wrap">
+              <div class="progress-bar-fill" id="ex5b-bar" style="width:65%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px">
+              <span id="ex5b-pct" style="font-size:12px;color:var(--muted)" aria-live="polite">65%</span>
+              <button class="btn-pri" style="font-size:12px;padding:5px 12px" onclick="
+                var w=document.getElementById('ex5b-wrap');
+                var b=document.getElementById('ex5b-bar');
+                var p=parseInt(w.getAttribute('aria-valuenow'))+10;
+                if(p>100)p=0;
+                b.style.width=p+'%';
+                w.setAttribute('aria-valuenow',p);
+                w.setAttribute('aria-valuetext',p+'% completado');
+                document.getElementById('ex5b-pct').textContent=p+'%';
+              ">+10%</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ✅ Semántica completa para
+     lectores de pantalla --&gt;</span>
+<span class="hl"><span class="kw">&lt;div</span> <span class="at">role</span>=<span class="val">"progressbar"</span></span>
+<span class="hl">     <span class="at">aria-valuenow</span>=<span class="val">"65"</span></span>
+<span class="hl">     <span class="at">aria-valuemin</span>=<span class="val">"0"</span></span>
+<span class="hl">     <span class="at">aria-valuemax</span>=<span class="val">"100"</span></span>
+<span class="hl">     <span class="at">aria-labelledby</span>=<span class="val">"etiqueta"</span></span>
+<span class="hl">     <span class="at">aria-valuetext</span>=<span class="val">"65% completado"</span><span class="kw">&gt;</span></span>
+  <span class="kw">&lt;div</span> <span class="at">style</span>=<span class="val">"width:65%"</span><span class="kw">&gt;&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      <code>role="progressbar"</code> define semánticamente qué es el elemento. <code>aria-valuenow</code>, <code>aria-valuemin</code> y <code>aria-valuemax</code> dan el valor actual y el rango. <code>aria-valuetext</code> permite dar una descripción más legible ("65% completado") en lugar del número solo.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 6: Botones Toggle                         -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-5">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 06 / 10</p>
+      <h2 class="ejemplo-titulo">Botones de selección (Toggle)</h2>
+      <p class="ejemplo-desc">Botones que tienen estado activo/inactivo deben comunicar ese estado más allá del color o estilo visual.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Estado solo con CSS, invisible semánticamente</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <label style="font-size:13px;color:#b0b0d0">Categorías</label>
+            <div class="toggle-group" id="ex6a-group">
+              <button class="toggle-btn pressed" onclick="this.classList.toggle('pressed')">JavaScript</button>
+              <button class="toggle-btn" onclick="this.classList.toggle('pressed')">CSS</button>
+              <button class="toggle-btn" onclick="this.classList.toggle('pressed')">HTML</button>
+              <button class="toggle-btn pressed" onclick="this.classList.toggle('pressed')">Node.js</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ El estado .pressed es visual
+     El lector no sabe qué está
+     seleccionado --&gt;</span>
+<span class="kw">&lt;button</span> <span class="at">class</span>=<span class="val">"toggle-btn pressed"</span><span class="kw">&gt;</span>
+  JavaScript
+<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;button</span> <span class="at">class</span>=<span class="val">"toggle-btn"</span><span class="kw">&gt;</span>
+  CSS
+<span class="kw">&lt;/button&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">aria-pressed comunica el estado</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <label style="font-size:13px;color:#b0b0d0" id="ex6b-lbl">Categorías</label>
+            <div class="toggle-group" role="group" aria-labelledby="ex6b-lbl">
+              <button class="toggle-btn" aria-pressed="true"
+                onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true');this.classList.toggle('pressed')">JavaScript</button>
+              <button class="toggle-btn" aria-pressed="false"
+                onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true');this.classList.toggle('pressed')">CSS</button>
+              <button class="toggle-btn" aria-pressed="false"
+                onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true');this.classList.toggle('pressed')">HTML</button>
+              <button class="toggle-btn" aria-pressed="true"
+                onclick="this.setAttribute('aria-pressed', this.getAttribute('aria-pressed')==='true'?'false':'true');this.classList.toggle('pressed')">Node.js</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ✅ aria-pressed="true/false"
+     comunica el estado al lector --&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">role</span>=<span class="val">"group"</span> <span class="at">aria-labelledby</span>=<span class="val">"lbl"</span><span class="kw">&gt;</span>
+  <span class="hl"><span class="kw">&lt;button</span> <span class="at">aria-pressed</span>=<span class="val">"true"</span><span class="kw">&gt;</span></span>
+  <span class="hl">  JavaScript</span>
+  <span class="hl"><span class="kw">&lt;/button&gt;</span></span>
+  <span class="kw">&lt;button</span> <span class="at">aria-pressed</span>=<span class="val">"false"</span><span class="kw">&gt;</span>
+    CSS
+  <span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/div&gt;</span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      Sin <code>aria-pressed</code>, el lector anuncia "JavaScript, botón" sin indicar si está activo. Con <code>aria-pressed="true"</code> anuncia "JavaScript, botón activado". El <code>role="group"</code> con <code>aria-labelledby</code> agrupa los botones bajo la etiqueta "Categorías" para contexto adicional.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 7: Tabs / Pestañas                        -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-6">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 07 / 10</p>
+      <h2 class="ejemplo-titulo">Pestañas (Tabs)</h2>
+      <p class="ejemplo-desc">Un patrón de tabs implementado con botones genéricos es visualmente funcional pero semánticamente vacío para tecnologías asistivas.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Tabs sin roles ni estado</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div class="tab-list" id="tabs-a">
+              <button class="tab-btn activo" onclick="cambiarTabMalo(0)">Perfil</button>
+              <button class="tab-btn" onclick="cambiarTabMalo(1)">Seguridad</button>
+              <button class="tab-btn" onclick="cambiarTabMalo(2)">Notif.</button>
+            </div>
+            <div id="tpa-0" class="tab-panel">Información de tu perfil público.</div>
+            <div id="tpa-1" class="tab-panel oculto">Cambia tu contraseña aquí.</div>
+            <div id="tpa-2" class="tab-panel oculto">Configura tus alertas.</div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ Botones normales, sin rol
+     El lector no sabe que son tabs --&gt;</span>
+<span class="kw">&lt;div&gt;</span>
+  <span class="kw">&lt;button</span> <span class="at">class</span>=<span class="val">"activo"</span><span class="kw">&gt;</span>Perfil<span class="kw">&lt;/button&gt;</span>
+  <span class="kw">&lt;button&gt;</span>Seguridad<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;div&gt;</span>Info del perfil...<span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="val">"oculto"</span><span class="kw">&gt;</span>Seguridad...<span class="kw">&lt;/div&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">role="tablist/tab/tabpanel" + aria-selected</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div class="tab-list" role="tablist" aria-label="Configuración de cuenta">
+              <button class="tab-btn activo" role="tab" aria-selected="true" aria-controls="tpb-0" id="tab-b0" onclick="cambiarTabBueno(0)">Perfil</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tpb-1" id="tab-b1" onclick="cambiarTabBueno(1)">Seguridad</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tpb-2" id="tab-b2" onclick="cambiarTabBueno(2)">Notif.</button>
+            </div>
+            <div id="tpb-0" role="tabpanel" aria-labelledby="tab-b0" class="tab-panel">Información de tu perfil público.</div>
+            <div id="tpb-1" role="tabpanel" aria-labelledby="tab-b1" class="tab-panel oculto">Cambia tu contraseña aquí.</div>
+            <div id="tpb-2" role="tabpanel" aria-labelledby="tab-b2" class="tab-panel oculto">Configura tus alertas.</div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="hl"><span class="kw">&lt;div</span> <span class="at">role</span>=<span class="val">"tablist"</span> <span class="at">aria-label</span>=<span class="val">"Config"</span><span class="kw">&gt;</span></span>
+  <span class="hl"><span class="kw">&lt;button</span> <span class="at">role</span>=<span class="val">"tab"</span> <span class="at">aria-selected</span>=<span class="val">"true"</span></span>
+  <span class="hl">        <span class="at">aria-controls</span>=<span class="val">"panel-1"</span></span>
+  <span class="hl">        <span class="at">id</span>=<span class="val">"tab-1"</span><span class="kw">&gt;</span>Perfil<span class="kw">&lt;/button&gt;</span></span>
+<span class="kw">&lt;/div&gt;</span>
+<span class="hl"><span class="kw">&lt;div</span> <span class="at">role</span>=<span class="val">"tabpanel"</span></span>
+<span class="hl">     <span class="at">id</span>=<span class="val">"panel-1"</span></span>
+<span class="hl">     <span class="at">aria-labelledby</span>=<span class="val">"tab-1"</span><span class="kw">&gt;</span></span>
+<span class="hl">  Info del perfil...
+<span class="kw">&lt;/div&gt;</span></span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      El patrón completo <code>role="tablist"</code> → <code>role="tab"</code> → <code>role="tabpanel"</code> es reconocido por todos los lectores de pantalla. <code>aria-selected="true/false"</code> indica qué pestaña está activa. <code>aria-controls</code> vincula cada tab con su panel, y <code>aria-labelledby</code> hace la conexión inversa.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 8: Modal / Diálogo                        -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-7">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 08 / 10</p>
+      <h2 class="ejemplo-titulo">Ventana modal / Diálogo</h2>
+      <p class="ejemplo-desc">Un modal sin ARIA puede atrapar al usuario de teclado o lector sin posibilidad de saber que hay un diálogo abierto o cómo cerrarlo.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Modal sin rol ni gestión de foco</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <button class="btn-pri" onclick="document.getElementById('modal-a').style.display='block'">Abrir modal</button>
+            <div id="modal-a" style="display:none;margin-top:12px">
+              <div class="modal-overlay">
+                <div class="modal-box">
+                  <h3>¿Eliminar cuenta?</h3>
+                  <p style="margin:8px 0">Esta acción no se puede deshacer.</p>
+                  <div style="display:flex;gap:8px;margin-top:12px">
+                    <button class="btn-del" onclick="document.getElementById('modal-a').style.display='none'">Eliminar</button>
+                    <button class="btn-pri" onclick="document.getElementById('modal-a').style.display='none'">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ div sin semántica de diálogo.
+     El foco no se mueve al modal.
+     Esc no lo cierra. Sin etiqueta. --&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">id</span>=<span class="val">"modal"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;h3&gt;</span>¿Eliminar cuenta?<span class="kw">&lt;/h3&gt;</span>
+  <span class="kw">&lt;button&gt;</span>Eliminar<span class="kw">&lt;/button&gt;</span>
+  <span class="kw">&lt;button&gt;</span>Cancelar<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/div&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">role="dialog" + aria-modal + aria-labelledby</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <button class="btn-pri" id="ex8b-open"
+              onclick="abrirModal()">Abrir modal</button>
+            <div id="modal-b" style="display:none;margin-top:12px">
+              <div class="modal-overlay">
+                <div class="modal-box"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="ex8b-title"
+                  aria-describedby="ex8b-desc">
+                  <h3 id="ex8b-title">¿Eliminar cuenta?</h3>
+                  <p id="ex8b-desc" style="margin:8px 0">Esta acción no se puede deshacer.</p>
+                  <div style="display:flex;gap:8px;margin-top:12px">
+                    <button class="btn-del" onclick="cerrarModal()">Eliminar</button>
+                    <button class="btn-pri" id="ex8b-cancel" onclick="cerrarModal()">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="hl"><span class="kw">&lt;div</span> <span class="at">role</span>=<span class="val">"dialog"</span></span>
+<span class="hl">     <span class="at">aria-modal</span>=<span class="val">"true"</span></span>
+<span class="hl">     <span class="at">aria-labelledby</span>=<span class="val">"titulo"</span></span>
+<span class="hl">     <span class="at">aria-describedby</span>=<span class="val">"desc"</span><span class="kw">&gt;</span></span>
+  <span class="kw">&lt;h3</span> <span class="at">id</span>=<span class="val">"titulo"</span><span class="kw">&gt;</span>¿Eliminar?<span class="kw">&lt;/h3&gt;</span>
+  <span class="kw">&lt;p</span>  <span class="at">id</span>=<span class="val">"desc"</span><span class="kw">&gt;</span>Sin deshacer.<span class="kw">&lt;/p&gt;</span>
+  <span class="kw">&lt;button&gt;</span>Eliminar<span class="kw">&lt;/button&gt;</span>
+  <span class="kw">&lt;button&gt;</span>Cancelar<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/div&gt;</span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      <code>role="dialog"</code> avisa al lector de pantalla que hay un diálogo activo. <code>aria-modal="true"</code> indica que el contenido detrás está bloqueado. <code>aria-labelledby</code> hace que el lector anuncie el título al abrir. En producción también se debe gestionar el foco (<code>focus()</code>) y capturar la tecla Escape para cerrar.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 9: Botones de icono                       -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-8">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 09 / 10</p>
+      <h2 class="ejemplo-titulo">Botones con solo icono</h2>
+      <p class="ejemplo-desc">Un botón que solo muestra un ícono o emoji es completamente opaco para usuarios de lectores de pantalla sin una etiqueta accesible.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Icono solo, sin etiqueta</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <p style="font-size:13px;color:#b0b0d0;margin-bottom:8px">Acciones del archivo</p>
+            <div style="display:flex;gap:8px">
+              <button class="icon-btn" style="background:var(--surface2);border-radius:7px;padding:10px">✏️</button>
+              <button class="icon-btn" style="background:var(--surface2);border-radius:7px;padding:10px">📤</button>
+              <button class="icon-btn" style="background:var(--surface2);border-radius:7px;padding:10px">🗑️</button>
+            </div>
+            <p class="demo-hint">El lector solo dirá "botón" sin contexto</p>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ El emoji no es texto legible
+     de forma confiable por los
+     lectores de pantalla --&gt;</span>
+<span class="kw">&lt;button&gt;</span>✏️<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;button&gt;</span>📤<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;button&gt;</span>🗑️<span class="kw">&lt;/button&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">aria-label + aria-hidden en el icono</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <p style="font-size:13px;color:#b0b0d0;margin-bottom:8px">Acciones del archivo</p>
+            <div style="display:flex;gap:8px">
+              <button class="icon-btn" aria-label="Editar archivo"
+                style="background:var(--surface2);border-radius:7px;padding:10px">
+                <span aria-hidden="true">✏️</span>
+              </button>
+              <button class="icon-btn" aria-label="Compartir archivo"
+                style="background:var(--surface2);border-radius:7px;padding:10px">
+                <span aria-hidden="true">📤</span>
+              </button>
+              <button class="icon-btn" aria-label="Eliminar archivo"
+                style="background:var(--surface2);border-radius:7px;padding:10px">
+                <span aria-hidden="true">🗑️</span>
+              </button>
+            </div>
+            <p class="demo-hint">El lector anunciará "Editar archivo, botón"</p>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ✅ aria-label describe la acción.
+     aria-hidden oculta el icono
+     al lector para evitar duplicados --&gt;</span>
+<span class="hl"><span class="kw">&lt;button</span> <span class="at">aria-label</span>=<span class="val">"Editar archivo"</span><span class="kw">&gt;</span></span>
+<span class="hl">  <span class="kw">&lt;span</span> <span class="at">aria-hidden</span>=<span class="val">"true"</span><span class="kw">&gt;</span>✏️<span class="kw">&lt;/span&gt;</span></span>
+<span class="hl"><span class="kw">&lt;/button&gt;</span></span>
+<span class="kw">&lt;button</span> <span class="at">aria-label</span>=<span class="val">"Eliminar archivo"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;span</span> <span class="at">aria-hidden</span>=<span class="val">"true"</span><span class="kw">&gt;</span>🗑️<span class="kw">&lt;/span&gt;</span>
+<span class="kw">&lt;/button&gt;</span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      <code>aria-label</code> reemplaza completamente el contenido del botón para lectores de pantalla, dando un nombre descriptivo de la acción. El <code>aria-hidden="true"</code> en el icono evita que el lector lo duplique (sin él podría decir "lápiz, Editar archivo, botón"). Para íconos SVG es la misma técnica: <code>aria-hidden="true"</code> en el SVG y <code>aria-label</code> en el botón.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- EJEMPLO 10: Spinner / Carga                       -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <section class="ejemplo" id="ej-9">
+    <div class="ejemplo-header">
+      <p class="ejemplo-num">Ejemplo 10 / 10</p>
+      <h2 class="ejemplo-titulo">Indicador de carga (Spinner)</h2>
+      <p class="ejemplo-desc">Un spinner animado no comunica nada al usuario de lector de pantalla: no sabe si la página está cargando, si algo falló, o si ya terminó.</p>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header sin">
+          <span class="panel-tag sin">❌ Sin</span>
+          <span class="panel-subtitulo">Animación pura, sin estado comunicado</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="spinner"></div>
+              <span style="font-size:13px;color:var(--muted)">Guardando cambios...</span>
+            </div>
+            <p class="demo-hint">El lector de pantalla ignora este div completamente</p>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ❌ div animado, invisible
+     para lectores de pantalla --&gt;</span>
+<span class="kw">&lt;div</span> <span class="at">class</span>=<span class="val">"spinner"</span><span class="kw">&gt;&lt;/div&gt;</span>
+<span class="kw">&lt;span&gt;</span>Guardando cambios...<span class="kw">&lt;/span&gt;</span>
+
+<span class="cm">&lt;!-- No hay anuncio, el usuario
+     no sabe qué está pasando --&gt;</span></pre></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header con">
+          <span class="panel-tag con">✅ Con</span>
+          <span class="panel-subtitulo">role="status" + aria-live + texto sr-only</span>
+        </div>
+        <div class="panel-demo">
+          <div class="demo-form">
+            <div role="status" aria-live="polite" aria-label="Guardando cambios, por favor espera"
+                 style="display:flex;align-items:center;gap:12px">
+              <div class="spinner" aria-hidden="true"></div>
+              <span style="font-size:13px;color:var(--muted)">Guardando cambios...</span>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <button class="btn-pri" style="font-size:12px;padding:6px 14px" onclick="
+                var s=document.getElementById('ex10b-status');
+                s.textContent='✅ Cambios guardados correctamente';
+                s.style.color='var(--good)';
+              ">Simular éxito</button>
+              <button class="btn-del" style="font-size:12px;padding:6px 14px" onclick="
+                var s=document.getElementById('ex10b-status');
+                s.textContent='❌ Error al guardar. Intenta de nuevo.';
+                s.style.color='var(--bad)';
+              ">Simular error</button>
+            </div>
+            <p id="ex10b-status" aria-live="assertive" class="live-region"></p>
+          </div>
+        </div>
+        <div class="panel-code"><pre><span class="cm">&lt;!-- ✅ role="status" es un live region
+     implícito (aria-live="polite") --&gt;</span>
+<span class="hl"><span class="kw">&lt;div</span> <span class="at">role</span>=<span class="val">"status"</span></span>
+<span class="hl">     <span class="at">aria-live</span>=<span class="val">"polite"</span></span>
+<span class="hl">     <span class="at">aria-label</span>=<span class="val">"Guardando..."</span><span class="kw">&gt;</span></span>
+<span class="hl">  <span class="kw">&lt;div</span> <span class="at">class</span>=<span class="val">"spinner"</span></span>
+<span class="hl">       <span class="at">aria-hidden</span>=<span class="val">"true"</span><span class="kw">&gt;&lt;/div&gt;</span></span>
+<span class="hl">  <span class="kw">&lt;span&gt;</span>Guardando cambios...<span class="kw">&lt;/span&gt;</span></span>
+<span class="hl"><span class="kw">&lt;/div&gt;</span></span>
+<span class="cm">&lt;!-- aria-live="assertive" para errores --&gt;</span>
+<span class="kw">&lt;p</span> <span class="at">aria-live</span>=<span class="val">"assertive"</span><span class="kw">&gt;&lt;/p&gt;</span></pre></div>
+      </div>
+    </div>
+    <div class="nota-aria"><strong>🔍 ¿Por qué importa?</strong>
+      <code>role="status"</code> es equivalente a <code>aria-live="polite"</code> y avisa al usuario que hay información de estado. El spinner recibe <code>aria-hidden="true"</code> porque es puramente decorativo. Para el resultado final (éxito/error), se usa <code>aria-live="assertive"</code> porque es información urgente que debe interrumpir la lectura actual del usuario.</div>
+  </section>
+
+</main>
+
+<script>
+  // ── Navegación de ejemplos ──
+  function mostrar(idx) {
+    document.querySelectorAll('.ejemplo').forEach(function(e, i) {
+      e.classList.toggle('visible', i === idx);
+    });
+    document.querySelectorAll('#nav-tabs button').forEach(function(b, i) {
+      b.classList.toggle('activo', i === idx);
+      b.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+  }
+
+  // ── Tabs malo ──
+  function cambiarTabMalo(idx) {
+    ['tpa-0','tpa-1','tpa-2'].forEach(function(id, i) {
+      document.getElementById(id).classList.toggle('oculto', i !== idx);
+    });
+    document.querySelectorAll('#tabs-a .tab-btn').forEach(function(b, i) {
+      b.classList.toggle('activo', i === idx);
+    });
+  }
+
+  // ── Tabs bueno ──
+  function cambiarTabBueno(idx) {
+    ['tpb-0','tpb-1','tpb-2'].forEach(function(id, i) {
+      document.getElementById(id).classList.toggle('oculto', i !== idx);
+    });
+    ['tab-b0','tab-b1','tab-b2'].forEach(function(id, i) {
+      var btn = document.getElementById(id);
+      btn.classList.toggle('activo', i === idx);
+      btn.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+  }
+
+  // ── Modal ──
+  function abrirModal() {
+    document.getElementById('modal-b').style.display = 'block';
+    setTimeout(function() {
+      document.getElementById('ex8b-cancel').focus();
+    }, 50);
+  }
+  function cerrarModal() {
+    document.getElementById('modal-b').style.display = 'none';
+    document.getElementById('ex8b-open').focus();
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') cerrarModal();
+  });
+</script>
+</body>
+</html>

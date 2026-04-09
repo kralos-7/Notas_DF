@@ -1,0 +1,71 @@
+:root {
+    --primary: #4a90e2;
+    --secondary: #f39c12;
+    --bg: #f4f4f9;
+}
+
+body { font-family: sans-serif; background: var(--bg); padding: 20px; }
+h2 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+.box { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 8px; font-weight: bold; }
+
+/* --- SECCIÓN FLEXBOX --- */
+.flex-container {
+    display: flex;
+    background: white;
+    padding: 15px;
+    border: 2px dashed var(--primary);
+    min-height: 200px;
+    
+    /* PROPIEDADES PARA MODIFICAR: */
+    flex-direction: row;      /* row, column, row-reverse */
+    justify-content: center;  /* flex-start, center, space-between, space-around */
+    align-items: center;      /* stretch, center, flex-start, flex-end */
+    flex-wrap: wrap;          /* nowrap, wrap */
+    gap: 10px;
+}
+
+/* --- SECCIÓN GRID --- */
+.grid-container {
+    display: grid;
+    background: white;
+    padding: 15px;
+    border: 2px dashed var(--secondary);
+    
+    /* PROPIEDADES PARA MODIFICAR: */
+    /* Define 3 columnas de igual tamaño */
+    grid-template-columns: repeat(3, 1fr); 
+    /* Define filas automáticas */
+    grid-template-rows: auto;
+    gap: 15px;
+}
+
+.grid-item-especial {
+    background: var(--secondary);
+    /* Para experimentar expandiendo celdas: */
+    /* grid-column: span 2; */
+}
+
+section { margin-bottom: 50px; }
+
+/* --- RESPONSIVE DESIGN --- */
+
+/* Cuando la pantalla mide menos de 768px (Tablets) */
+@media (max-width: 768px) {
+	.grid-container {
+		/* Bajamos de 3 columnas a 2 */
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* Cuando la pantalla mide menos de 480px (Celulares) */
+@media (max-width: 480px) {
+	.flex-container {
+		/* Cambiamos la dirección a columna para que no se amontonen */
+		flex-direction: column;
+	}
+
+	.grid-container {
+        /* Todo a una sola columna */
+        grid-template-columns: 1fr;
+	}
+}

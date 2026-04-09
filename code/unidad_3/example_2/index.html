@@ -3,71 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Laboratorio de Movimiento</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-wrap: wrap; gap: 40px; padding: 50px; background-color: #f0f2f5; }
-        
-        /* Contenedor base para cada ejemplo */
-        .card {
-            width: 150px; height: 150px;
-            background-color: #3498db;
-            color: white;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 12px; font-weight: bold; cursor: pointer;
-        }
+    <link rel="stylesheet" href="style.css">
 
-        /* --- 1. TRANSICIONES (Efecto cuando algo cambia de estado) --- */
-        .transicion {
-            /* propiedad | duración | curva de tiempo | retraso */
-            transition: all 0.4s ease-in-out; 
-        }
-
-        .transicion:hover {
-            background-color: #2ecc71; /* Cambia color */
-            transform: scale(1.2) rotate(10deg); /* Se agranda y gira */
-            border-radius: 50%; /* Se vuelve círculo */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Sombra suave */
-        }
-
-        /* --- 2. ANIMACIONES (Movimiento automático sin interacción) --- */
-        
-        /* Definimos los "fotogramas" de la animación */
-        @keyframes miAnimacion {
-            0% { transform: translateY(0); background-color: #3498db; }
-            50% { transform: translateY(-20px); background-color: #9b59b6; }
-            100% { transform: translateY(0); background-color: #3498db; }
-        }
-
-        .animacion-infinita {
-            /* nombre | duración | velocidad | repetición */
-            animation: miAnimacion 2s infinite ease-in-out;
-        }
-
-        /* --- 3. EFECTO DE PULSO (Muy común en botones) --- */
-        @keyframes pulso {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
-        }
-
-        .pulso {
-            background-color: #e74c3c;
-            animation: pulso 1.5s infinite;
-        }
-
-        /* --- 4. EFECTO DE CARGA (Loading) --- */
-        @keyframes girar {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .spinner {
-            width: 50px; height: 50px;
-            border: 5px solid #ccc;
-            border-top: 5px solid #34495e;
-            border-radius: 50%;
-            animation: girar 1s linear infinite; /* 'linear' para que el giro sea constante */
-        }
-    </style>
 </head>
 <body>
 

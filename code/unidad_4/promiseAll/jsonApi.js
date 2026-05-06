@@ -1,19 +1,15 @@
-const API_URL = 'https://fakestoreapi.com/products ';
+const API_URL = 'https://fakestoreapi.com/products';
 
 async function fetchData() {
   try {
-    // Iniciamos ambas peticiones en paralelo
     const responseProducts = await fetch(API_URL);
 
-    // Verificamos si ambas respuestas son exitosas
     if (!responseProducts.ok) {
       throw new Error('Error en una de las peticiones');
     }
 
-    // Convertimos las respuestas a JSON (también en paralelo)
-    const productsData = responseProducts.json();
+    const productsData = await responseProducts.json(); // 👈 aquí está el fix
 
-    // DummyJSON devuelve objetos con propiedades 'users' y 'products'
     console.log('Productos:', productsData);
 
   } catch (error) {

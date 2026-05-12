@@ -1,6 +1,6 @@
 function Saludo() {
     return (
-        <h2>Bienvenido al curso de React 🚀</h2>
+        <h2>Bienvenido a la unidad 5 - Programación con React 🚀</h2>
     )
 }
 

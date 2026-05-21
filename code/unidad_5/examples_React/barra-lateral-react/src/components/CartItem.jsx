@@ -1,4 +1,4 @@
-function CartItem({ product }) {
+function CartItem({ product, onDelete }) {
     return (
         <div className="d-flex border-bottom pb-3 mb-3">
         <img
@@ -18,7 +18,9 @@ function CartItem({ product }) {
             <strong>
                 ${product.price}
             </strong>
-            <button className="btn btn-sm btn-outline-danger">
+            <button className="btn btn-sm btn-outline-danger"
+                    onClick={() => onDelete(product.id)}    
+            >
                 Eliminar
             </button>
             </div>

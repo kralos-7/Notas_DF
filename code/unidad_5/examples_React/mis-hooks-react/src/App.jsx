@@ -18,15 +18,13 @@ function App() {
 	 		</button>
 			
 			<div className="main-app">
-      			<h1>Mi Aplicación de React</h1>
+      			<h1>Hook useEffect</h1>
       			<hr />
       			<ContadorDeNotificaciones />
-
     		</div>
 			
 			<div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      			<h1>Mi Proyecto de React</h1>
-      			<p>Probando nuestro primer useRef:</p>
+      			<h1>Hook useRef</h1>
       			<hr />
       			<EnfoqueMagico />
     		</div>

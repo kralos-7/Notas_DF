@@ -16,20 +16,20 @@ function App() {
 			<h1>Hook useState</h1>
 			<button onClick={() => setCuenta(cuenta + 1)}>
 				Me hiciste clic {cuenta} veces
-	 		</button>
+			</button>
 			
 			<div className="main-app">
-      			<h1>Hook useEffect</h1>
-      			<hr />
-      			<ContadorDeNotificaciones />
-    		</div>
+				<h1>Hook useEffect</h1>
+				<hr />
+				<ContadorDeNotificaciones />
+			</div>
 			
 			<div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      			<h1>Hook useRef</h1>
-      			<hr />
-      			<EnfoqueMagico />
-    		</div>
-	 	</>
+				<h1>Hook useRef</h1>
+				<hr />
+				<EnfoqueMagico />
+			</div>
+		</>
 	) 
 }
 

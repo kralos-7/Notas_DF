@@ -13,6 +13,7 @@ function App() {
 
 	return (
 		<>
+			<h1>Hook useState</h1>
 			<button onClick={() => setCuenta(cuenta + 1)}>
 				Me hiciste clic {cuenta} veces
 	 		</button>

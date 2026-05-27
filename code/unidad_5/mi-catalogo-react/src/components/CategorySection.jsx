@@ -1,6 +1,6 @@
 import ProductCard from './ProductCard'
 
-function CategorySection({ title, products }) {
+function CategorySection({ title, products,  onAdd }) {
 
   return (
     <section className="mb-5">
@@ -20,7 +20,7 @@ function CategorySection({ title, products }) {
               minWidth: '300px'
             }}
           >
-            <ProductCard product={product} />
+            <ProductCard product={product} onAdd={onAdd} />
           </div>
         ))}
       </div>

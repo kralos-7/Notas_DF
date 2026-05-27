@@ -1,4 +1,4 @@
-function ProductCard({ product }) {
+function ProductCard({ product, onAdd }) {
 
     return (
         <div className="card h-100 shadow border-0 rounded-4">
@@ -18,7 +18,7 @@ function ProductCard({ product }) {
                 <p className="card-text fs-5 fw-bold text-primary">
                 ${product.precio}
                 </p>
-                <button className="btn btn-dark w-100 rounded-pill">
+                <button className="btn btn-dark w-100 rounded-pill" onClick={() => onAdd(product)}>
                 Agregar al carrito
                 </button>
             </div>

@@ -5,6 +5,7 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import products from './data/productos'
 import CategorySection from './components/CategorySection'
+import CartSidebar from './components/CartSidebar'
 
 function App() {
   const categories = [
@@ -13,6 +14,14 @@ function App() {
     "Deportes",
     "Ropa"
   ]
+
+  const [cart, setCart] = useState([])
+
+  function addToCart(product) {
+    setCart([...cart, product])
+  }
+
+
   return (
     <div className="container py-5">
       <h1 className="text-center mb-5">
@@ -27,9 +36,12 @@ function App() {
               product => product.category === category
             )
           }
+          onAdd={addToCart}
         />
 
       ))}
+
+      <CartSidebar cart={cart} />
 
     </div>
   )

@@ -11,6 +11,7 @@ function CartSidebar({ cart }) {
           >
             <h6>{item.nombre}</h6>
             <p>${item.precio}</p>
+            <p>Unidades: {item.quantity}</p>
           </div>
         ))
       }

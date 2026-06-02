@@ -18,9 +18,32 @@ function App() {
   const [cart, setCart] = useState([])
 
   function addToCart(product) {
-    setCart([...cart, product])
-  }
 
+    const existingProduct = cart.find(
+      item => item.id === product.id
+    )
+
+    if (existingProduct) {
+      const updatedCart = cart.map(item =>
+        item.id === product.id
+          ? {
+              ...item,
+              quantity: item.quantity + 1
+            }
+          : item
+      )
+
+      setCart(updatedCart)
+    } else {
+      setCart([
+        ...cart,
+        {
+          ...product,
+          quantity: 1
+        }
+      ])
+    }
+  }
 
   return (
     <div className="container py-5">
